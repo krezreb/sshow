@@ -9,18 +9,23 @@ from threading import Timer
 	
 def run(cmd, timeout_sec=10):
 	proc = subprocess.Popen(shlex.split(cmd), stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-	kill_proc = lambda p: p.kill()
-	timer = Timer(timeout_sec, kill_proc, [proc])
-	try:
-		timer.start()
+	
+	if timeout_sec <= 0:
 		stdout, stderr = proc.communicate()
-	finally:
-		timer.cancel()
-
-	exitcode = int(proc.returncode)
-    
-	if exitcode == -9 :
-		stderr = "Command timed out after {} seconds".format(timeout_sec)
+		exitcode = int(proc.returncode)
+	else:
+		kill_proc = lambda p: p.kill()
+		timer = Timer(timeout_sec, kill_proc, [proc])
+		try:
+			timer.start()
+			stdout, stderr = proc.communicate()
+		finally:
+			timer.cancel()
+	
+		exitcode = int(proc.returncode)
+	    
+		if exitcode == -9 :
+			stderr = "Command timed out after {} seconds".format(timeout_sec)
     	
 	return (stdout, stderr, exitcode)
 
@@ -35,7 +40,7 @@ if '--test' in sys.argv:
 	
 	
 try:
-	TIMEOUT=int(os.environ['NBASH_TIMEOUT'])
+	TIMEOUT=int(os.environ['NSSH_TIMEOUT'])
 except:
 	TIMEOUT=15	
 	
@@ -65,7 +70,7 @@ for line in data:
 			print err
 	
 '''
-# instead of bashing to one server, bash n servers =)
+# instead of sshing to one server, ssh to n servers =)
 
 CMD=$1
 
