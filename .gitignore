@@ -1,0 +1,7 @@
+*.env
+*.envrc
+terraform.tfstate.d
+.project
+.pydevproject
+.settings
+*.ipynb_checkpoints
