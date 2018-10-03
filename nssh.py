@@ -53,7 +53,13 @@ except:
 data = sys.stdin.readlines()
 
 
+try:
+	sudo = os.environ['NSSH_SUDO'][0].lower() in ('y', '1', 'o')
+except:
+	sudo = False
 
+if sudo:
+	CMD = "sudo {}".format(CMD)
 
 for line in data:
 	cmd = 'ssh {} "{}"'.format(line.strip(), CMD)
