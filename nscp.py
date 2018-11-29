@@ -48,6 +48,9 @@ except:
 if REMOTE_PATH[0] != ':':
 	REMOTE_PATH = ':'+REMOTE_PATH
 
+TIMEOUT=int(os.getenv('NSCP_TIMEOUT', 15))
+
+
 data = sys.stdin.readlines()
 
 for line in data:
@@ -56,7 +59,7 @@ for line in data:
 		print cmd
 	else:
 		print line.strip()
-		(out, err, exitcode) = run(cmd, 15)
+		(out, err, exitcode) = run(cmd, TIMEOUT)
 		if exitcode == 0:
 			print "OK"
 		else:
