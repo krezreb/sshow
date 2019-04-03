@@ -1,4 +1,4 @@
-#!/bin/bash 
+#!/bin/bash
 
 LONGFORM=false
 if [[ "$@" == *"--long"* ]] ; then
@@ -20,7 +20,7 @@ if [ -z "${include}" ]
 then
 	include=" "
 else
-	include=$(eval ls $include)
+	include=$(eval find $include  -maxdepth 0  -type f )
 fi
 
 for line in $(grep -ine "^Host "  ~/.ssh/config $include | cut -d '#' -f 1 | grep -v \* | grep -i  "${SEARCH/,/\\\|}" | sed "s/:Host /:/g"  ) ; do
