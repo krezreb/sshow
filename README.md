@@ -56,4 +56,26 @@ sshow pp | nscp my_file.txt
 nscp and nssh timeout after 15 seconds if the remote server does not respond =)
 To alter this timeout, modify NSSH_TIMEOUT environment variable.  To have no timeout, set NSSH_TIMEOUT to  0 or lower
 
+# go to first result
+
+If you want to just ssh into the first result, add go to the end of the command
+
+
+```
+sshow colas
+```
+
+```
+AWSEC2-hopmedia-colas-pp
+```
+
+```
+sshow colas go
+```
+
+```
+ssh AWSEC2-hopmedia-colas-pp
+
+.....
+```
 

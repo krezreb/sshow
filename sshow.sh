@@ -15,6 +15,11 @@ if [ -z "${SEARCH+x}" ]; then
 	SEARCH=''
 fi
 
+GOTO=$2
+if [ -z "${GOTO+x}" ]; then
+    GOTO=''
+fi
+
 include=$(cat ~/.ssh/config | grep Include | cut -d ' ' -f 2 )
 if [ -z "${include}" ]
 then
@@ -30,6 +35,11 @@ for line in $(grep -ine "^Host "  ~/.ssh/config $include | cut -d '#' -f 1 | gre
     if [ $LONGFORM == true ] ; then
         echo -e "$host\t\t\t$file\t$linenum"
     else
+        if [ "$GOTO" == "go" ] ; then
+          echo "sshing to $host"
+          ssh $host
+          exit  
+        fi
         echo $host
     fi
 done
