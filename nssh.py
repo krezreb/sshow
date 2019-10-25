@@ -3,6 +3,7 @@
 
 import os, sys
 from subprocess import Popen, PIPE
+import argparse
 
 import subprocess, shlex
 from threading import Timer
@@ -30,67 +31,56 @@ def run(cmd, timeout_sec=10):
 	return (stdout, stderr, exitcode)
 
 
-testonly=False
 
-if '--test' in sys.argv:
+parser = argparse.ArgumentParser(description='sshow.', add_help=True)
+
+parser.add_argument('command', default=None, nargs='+', help='command to run remotely')
+parser.add_argument('--timeout',default="15", help='Remote command timeout in seconds, can also be set with NSSH_TIMEOUT env var')
+parser.add_argument('--sudo', action='store_true', default=False, help='Whether nssh should auto sudo, can also be set via NSSH_SUDO env var')
+parser.add_argument('--test', action='store_true', default=False, help="dry run, don't actually run command")
+
+
+args = parser.parse_args()
+
+if args.test:
 	print ""
 	print "--test specified so not going to actually do anything"
 	print ""
-	testonly=True
-	
 	
 try:
 	TIMEOUT=int(os.environ['NSSH_TIMEOUT'])
 except:
-	TIMEOUT=15	
+	TIMEOUT=args.timeout	
 	
-try:
-	CMD=sys.argv[1]
-except:
-	print 'no command specified'
+CMD=args.command[0]
+
+if CMD == None:
+	print 'No command specified, see nssh -h for help'
 	exit (1)
-
-data = sys.stdin.readlines()
-
 
 try:
 	sudo = os.environ['NSSH_SUDO'][0].lower() in ('y', '1', 'o')
 except:
-	sudo = False
+	sudo = args.sudo
 
 if sudo:
 	CMD = "sudo {}".format(CMD)
 
+data = sys.stdin.readlines()
+
 for line in data:
 	cmd = 'ssh {} "{}"'.format(line.strip(), CMD)
-	if testonly:
+	print line.strip()
+	print "___________________________________________________________"
+
+	if args.test:
 		print cmd
+		print ""
 	else:
-		print line.strip()
-		print "___________________________________________________________"
-		(out, err, exitcode) = run(cmd, TIMEOUT)
+		(out, err, exitcode) = run(cmd, int(TIMEOUT))
 		if exitcode == 0:
 			print out
 		else:
 			print "exit code {}".format(exitcode)
 			print err
 	
-'''
-# instead of sshing to one server, ssh to n servers =)
-
-CMD=$1
-
-if [ -z "${CMD+x}" ]; then
-	echo "No command specified "
-	exit 1	
-fi
-
-# read all lines in lines array
-while IFS= read -r line; do
-	cmd="ssh ${line} \"$CMD\""
-	echo $cmd
-	$cmd & grep ''
-done 
-
-
-'''
