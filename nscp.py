@@ -28,16 +28,16 @@ def run(cmd, timeout_sec=10):
 testonly=False
 
 if '--test' in sys.argv:
-	print ""
-	print "--test specified so not going to actually do anything"
-	print ""
+	print ("")
+	print ("--test specified so not going to actually do anything")
+	print ("")
 	testonly=True
 	
 	
 try:
 	FILE=sys.argv[1]
 except:
-	print 'no file specified'
+	print ('no file specified')
 	exit (1)
 
 try:
@@ -56,15 +56,15 @@ data = sys.stdin.readlines()
 for line in data:
 	cmd = 'scp "{}" {}{}'.format(FILE, line.strip(), REMOTE_PATH)
 	if testonly:
-		print cmd
+		print (cmd)
 	else:
-		print line.strip()
+		print (line.strip())
 		(out, err, exitcode) = run(cmd, TIMEOUT)
 		if exitcode == 0:
-			print "OK"
+			print ("OK")
 		else:
-			print "exit code {}".format(exitcode)
-			print err
+			print ("exit code {}".format(exitcode))
+			print (err)
 		
-	print ""
+	print ("")
 	
