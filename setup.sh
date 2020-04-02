@@ -6,12 +6,13 @@ cd $(dirname $0)
 
 SRC_DIR=$(pwd)
 
-TARGET_DIR=$(echo $PATH | tr ":" "\n" | grep $HOME | head -n 1) 
+if [ -z ${TARGET_DIR+x} ] ; then
+	TARGET_DIR=$(echo $PATH | tr ":" "\n" | grep $HOME | head -n 1) 
 
-if [ `whoami` = "root" ] ; then
-	TARGET_DIR=/usr/bin
+	if [ `whoami` = "root" ] ; then
+		TARGET_DIR=/usr/bin
+	fi
 fi
-
 
 install () {
   	echo installing into $TARGET_DIR
