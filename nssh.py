@@ -43,9 +43,9 @@ parser.add_argument('--test', action='store_true', default=False, help="dry run,
 args = parser.parse_args()
 
 if args.test:
-	print ""
-	print "--test specified so not going to actually do anything"
-	print ""
+	print ("")
+	print ("--test specified so not going to actually do anything")
+	print ("")
 	
 try:
 	TIMEOUT=int(os.environ['NSSH_TIMEOUT'])
@@ -55,7 +55,7 @@ except:
 CMD=args.command[0]
 
 if CMD == None:
-	print 'No command specified, see nssh -h for help'
+	print ('No command specified, see nssh -h for help')
 	exit (1)
 
 try:
@@ -70,17 +70,17 @@ data = sys.stdin.readlines()
 
 for line in data:
 	cmd = 'ssh {} "{}"'.format(line.strip(), CMD)
-	print line.strip()
-	print "___________________________________________________________"
+	print (line.strip())
+	print ("___________________________________________________________")
 
 	if args.test:
-		print cmd
-		print ""
+		print (cmd)
+		print ("")
 	else:
 		(out, err, exitcode) = run(cmd, int(TIMEOUT))
 		if exitcode == 0:
-			print out
+			print (out)
 		else:
-			print "exit code {}".format(exitcode)
-			print err
+			print ("exit code {}".format(exitcode))
+			print (err)
 	
