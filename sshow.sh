@@ -25,7 +25,7 @@ if [ -z "${include}" ]
 then
 	include=" "
 else
-	include=$(eval find $include  -maxdepth 0  -type f )
+	include=$(eval find -L $include  -maxdepth 0  -type f  )
 fi
 
 
