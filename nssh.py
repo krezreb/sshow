@@ -79,6 +79,8 @@ for line in data:
 	else:
 		(out, err, exitcode) = run(cmd, int(TIMEOUT))
 		if exitcode == 0:
+			if type(out) is bytes:
+				out = out.decode('utf-8')
 			print (out)
 		else:
 			print ("exit code {}".format(exitcode))
